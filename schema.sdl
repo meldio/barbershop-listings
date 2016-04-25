@@ -1,0 +1,86 @@
+## Barbershop Listings Schema Definition
+
+type User implements Node @rootViewer(field: "viewer") {
+   id: ID!
+   firstName: String
+   lastName: String
+   emails: [String]!
+   profilePictureUrl: String
+   bookings: NodeConnection(Booking, user)
+   # if user is a barber, reference to their barber profile goes here:
+   barber: Barber
+}
+
+type Barbershop implements Node @rootConnection(field: "allBarbershops") {
+  id: ID!
+  name: String!
+  location: String!
+  address: Address!
+  rating: Float
+  photoUrls: [String]
+  barbers: NodeConnection(Barber, barbershops)
+}
+
+type Barber implements Node {
+  id: ID!
+  name: String!
+  pictureUrl: String
+  twitterHandle: String
+  barbershops: NodeConnection(Barbershop, barbers)
+  services: NodeConnection(Service, barber)
+  bookings: NodeConnection(Booking, barber)
+}
+
+type Booking implements Node {
+  id: ID!
+  barber: NodeConnection(Barber, bookings)
+  user: NodeConnection(User, bookings)
+  startTimestamp: String!
+  endTimestamp: String!
+  service: Service
+  tip: Float # zero means cash tip
+  status: BookingStatus
+  statusTimestamp: String!
+}
+
+enum BookingStatus { BOOKED, COMPLETED, CANCELLED }
+
+type Service implements Node {
+  id: ID!
+  name: String!
+  duration: Int # in minutes, 15 min increments. e.g. 15, 30, 45, 60 min
+  price: Float
+  barber: NodeConnection(Barber, services)
+}
+
+type Address {
+  street: String!
+  streetCont: String
+  city: String!
+  state: String!
+  zip: String!
+}
+
+mutation addBooking(
+  barberId: ID!
+  serviceId: ID!
+  startTimestamp: String!
+  tip: Float # zero === cash tip
+) {
+  bookingEdge: Edge(Booking)
+  viewer: User
+}
+
+mutation cancelBooking(
+  id: ID!
+) {
+  booking: Booking
+  viewer: User
+}
+
+mutation completeBooking(
+  id: ID!
+) {
+  booking: Booking
+  viewer: User
+}

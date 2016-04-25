@@ -1,0 +1,39 @@
+{
+  "name": "barbershop-listings",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/meldio/barbershop-listings.git"
+  },
+  "license": "MIT",
+  "config": {
+    "meldio": {
+      "dbConnectionUri": "mongodb://localhost:27017/barbershop-listings",
+      "protocol": "http",
+      "host": "localhost",
+      "port": 9000,
+      "enabledAuth": [
+        "facebook",
+        "google"
+      ],
+      "sessionDurationUnit": "months",
+      "sessionDuration": "1",
+      "scopes": {
+        "facebook": [
+          "public_profile",
+          "email"
+        ],
+        "google": [
+          "https://www.googleapis.com/auth/userinfo.profile",
+          "https://www.googleapis.com/auth/userinfo.email"
+        ]
+      },
+      "root": "",
+      "schema": "schema.sdl",
+      "permissions": "permissions.js",
+      "mutations": "mutations",
+      "hooks": "hooks",
+      "build": ".build"
+    }
+  }
+}
